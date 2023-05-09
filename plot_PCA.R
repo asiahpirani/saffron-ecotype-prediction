@@ -1,9 +1,9 @@
-library(ggfortify)
-library(FactoMineR)
-library(factoextra)
+require(ggfortify)
+require(FactoMineR)
+require(factoextra)
 require(ggrepel)
 
-# col_names = c('No of Flower', 'Flower FW', 'Stigma FW', 'Flower DW', 'Stigma DW', 'Stigma length', 'Yield', 'Picrocrocin', 'Safranal', 'Crocin', 'Total metabolites')
+
 col_names = c('N.o.F', 'F.FW', 'S.FW', 'F.DW', 'S.DW', 'S.Len', 'Yield', 'Picrocrocin', 'Safranal', 'Crocin', 'T.Met')
 for (y in c('1' , '2'))
 {
@@ -24,14 +24,20 @@ for (y in c('1' , '2'))
   {
     X = all_x[[i]]
     res.pca <- PCA(X, graph = FALSE, scale.unit = TRUE)
-    p = fviz_pca_biplot(res.pca, repel = TRUE, label.padding=0.5, label='var', labelsize = 3, col.var = 'blue', col.ind="contrib", gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07")) + # , geom.var='arrow' 
-      geom_label_repel(aes(label=rownames(X), color=contrib), alpha=0.6, size=3, box.padding = unit(.35, "lines"), min.segment.length = unit(0, 'lines')) + 
-      theme(panel.border = element_rect(colour = "gray", fill=NA, size=1), plot.title = element_text(hjust = 0.5)) + 
+    p = fviz_pca_biplot(res.pca, repel = TRUE, label.padding=0.5, 
+                        label='var', labelsize = 7, col.var = 'blue', 
+                        col.ind="contrib", 
+                        gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07")) + 
+      geom_label_repel(aes(label=rownames(X), color=contrib), 
+                       alpha=0.6, size=7, 
+                       box.padding = unit(.35, "lines"), 
+                       min.segment.length = unit(0, 'lines')) + 
+      theme(panel.border = element_rect(colour = "gray", fill=NA, size=1), 
+            plot.title = element_text(size=30, hjust = 0.5),
+            axis.text=element_text(size=20),
+            axis.title=element_text(size=28)) + 
       ggtitle(paste(all_names[i],' (Y',y,')', sep=''))
-    # pca_res <- prcomp(X, scale. = TRUE)
-    # ggplot() + 
-    #   geom_point(data=pca_res$x, aes(x=PC1, y=PC2), col='blue') + 
-    #   geom_point(data=pca_res$rotation, aes(x=PC1, y=PC2), color='red') 
+    
     ggsave(filename = paste('pca_',all_fnames[i],'_y',y,'_v2.pdf', sep=''))
   }
 }
@@ -52,10 +58,16 @@ X = rbind(X1, X2)
 
 res.pca = prcomp(X[,-12], scale=T)
 
-p = fviz_pca_biplot(res.pca, repel = TRUE, label.padding=0.5, label='var', labelsize = 3, habillage = X$Year) +
+p = fviz_pca_biplot(res.pca, repel = TRUE, label.padding=0.5, 
+                    label='var', labelsize = 7, habillage = X$Year) +
   ggforce::geom_mark_ellipse(aes(fill=Groups, color=Groups)) +
-  geom_label_repel(aes(label=rownames(X)), alpha=0.6, size=3, box.padding = unit(.35, "lines"), min.segment.length = unit(0, 'lines')) +
-  theme(panel.border = element_rect(colour = "gray", fill=NA, size=1), plot.title = element_text(hjust = 0.5)) + 
+  geom_label_repel(aes(label=rownames(X)), alpha=0.6, size=7, 
+                   box.padding = unit(.35, "lines"), 
+                   min.segment.length = unit(0, 'lines')) +
+  theme(panel.border = element_rect(colour = "gray", fill=NA, size=1), 
+        plot.title = element_text(size=30, hjust = 0.5),
+        axis.text=element_text(size=20),
+        axis.title=element_text(size=28)) + 
   ggtitle('Both Years')
 
 ggsave(filename = 'pca_together.pdf', width = 8, height = 8)
