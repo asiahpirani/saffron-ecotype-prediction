@@ -71,3 +71,4 @@ p = fviz_pca_biplot(res.pca, repel = TRUE, label.padding=0.5,
   ggtitle('Both Years')
 
 ggsave(filename = 'pca_together.pdf', width = 8, height = 8)
+
